@@ -70,7 +70,6 @@ app.use(
 
 app.use('/', require('./routes/index'));
 app.use('/api', require('./routes/auth-routes'));
-app.use('/api', require('./routes/cookbook-routes'));
 app.use('/api', require('./routes/recipe-routes'));
 
 module.exports = app;

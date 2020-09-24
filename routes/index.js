@@ -2,12 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 
-const Cookbook = require('../models/Cookbook.model');
+const Recipe = require('../models/Recipe.model');
 
 router.get('/', (_, res) => {
-  Cookbook.find()
-    .then((cookbooks) => res.render('index', {cookbooks}))
-    .catch((err) => console.error(`error finding cookbooks: ${err}`));
+  Recipe.find()
+    .then((recipes) => res.render('index', {recipes}))
+    .catch((err) => console.error(`error finding recipes: ${err}`));
 });
 
 module.exports = router;

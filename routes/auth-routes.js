@@ -7,7 +7,6 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User.model');
 
 authRoutes.post('/signup', (req, res, next) => {
-  // ! NOT SURE IF THIS IS HOW IT WILL WORK WITH REACT HOOK FORMS?
 
   const username = req.body.username;
   const password = req.body.password;
@@ -83,7 +82,6 @@ authRoutes.post('/logout', (req, res, next) => {
 });
 
 authRoutes.get('/loggedin', (req, res, next) => {
-  // req.isAuthenticated() is defined by passport
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
     return;

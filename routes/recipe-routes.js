@@ -2,90 +2,115 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 
-const Cookbook = require('../models/Cookbook.model');
 const Recipe = require('../models/Recipe.model');
 
-// ========================
-// * ADD Recipe to Cookbook
-// This WORKS, BUT need to check later if the cookbookId shouldn't come from the body of the form submit instead of from the params? (see the Ironhack tutorial from paragraph 'At the very beginning, we created two files inside routes folder. One was project-routes.js, which we filled with routes, and now we will do the same for task-routes.js:')
-// ========================
+// ============
+// * ADD Recipe
+// ============
 
-router.post('/cookbooks/:cookbookId/recipes', (req, res, next) => {
+router.post('/recipes/add', (req, res) => {
   const {title, ingredients, instructions, image, duration} = req.body;
-
+  // createdBy <= this needs to be added later
   Recipe.create({
     title,
     ingredients,
     instructions,
     image,
     duration,
+    // createdBy: req.params.SOMTHINE
   })
     .then((response) => {
-      return Cookbook.findByIdAndUpdate(req.params.cookbookId, {
-        $push: {recipes: response._id},
-      });
-    })
-    .then((theResponse) => {
-      res.json(theResponse);
+      res.json(response);
     })
     .catch((err) => {
       res.json(err);
     });
 });
 
-// !===============================
-// ! GET All Recipes
-// ! This should be on the homepage
-// !===============================
+// ?================================
+// ? GET All Recipes
+// ? Not sure this is really needed?
+// ?================================
 
-// ================================
-// * GET Recipe by ID from Cookbook
-// ================================
+router.get('/recipes', (_, res) => {
+  Recipe.find()
+    // .populate('createdBy')
+    .then((allTheRecipes) => {
+      res.json(allTheRecipes);
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+});
 
-router.get('/cookbooks/:cookbookId/recipes/:recipeId', (req, res, next) => {
-  // ? can't i use the cookbookId here from the params to make this more effective?
+// !=============================
+// ! GET All Recipes from User
+// TODO: Add this for profile page
+// !=============================
 
-  Recipe.findById(req.params.recipeId)
+// router.get('/:userId/recipes', (_, res) => {
+//   Recipe.find({something something something})
+//     .populate('createdBy')
+//     .then((allTheRecipes) => {
+//       res.json(allTheRecipes);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
+
+// ====================
+// * GET Recipe by ID
+// ====================
+
+router.get('/recipes/:id', (req, res) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400).json({message: 'Specified id is not valid'});
+    return;
+  }
+
+  Recipe.findById(req.params.id)
+    .populate('createdBy')
     .then((recipe) => {
-      res.json(recipe);
+      res.status(200).json(recipe);
     })
     .catch((error) => {
       res.json(error);
     });
 });
 
-// =================================
-// * UPDATE Recipe by ID in Cookbook
-// =================================
+// =======================
+// * UPDATE Recipe by ID
+// =======================
 
-router.put('/cookbooks/:cookbookId/recipes/:recipeId', (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.recipeId)) {
+router.put('/recipes/:id', (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({message: 'Specified id is not valid'});
     return;
   }
 
-  Recipe.findByIdAndUpdate(req.params.recipeId, req.body)
+  Recipe.findByIdAndUpdate(req.params.id, req.body)
     .then(() => {
-      res.json({message: `Recipe with id ${req.params.recipeId} was updated successfully.`});
+      res.json({message: `Recipe with id ${req.params.id} was updated successfully.`});
     })
-    .catch((err) => {
-      res.json(err);
+    .catch((error) => {
+      res.json(error);
     });
 });
 
-// =================================
-// * DELETE Recipe by ID in Cookbook
-// =================================
+// =======================
+// * DELETE Recipe by ID
+// =======================
 
-router.delete('/cookbooks/:cookbookId/recipes/:recipeId', (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.recipeId)) {
+router.delete('/recipes/:id', (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({message: 'Specified id is not valid'});
     return;
   }
 
-  Recipe.findByIdAndRemove(req.params.recipeId)
+  Recipe.findByIdAndRemove(req.params.id)
     .then(() => {
-      res.json({message: `Recipe with ${req.params.recipeId} is removed successfully.`});
+      res.json({message: `Recipe with ${req.params.id} was removed successfully.`});
     })
     .catch((error) => {
       res.json(error);

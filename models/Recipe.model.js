@@ -3,12 +3,12 @@ const ObjectId = Schema.Types.ObjectId;
 
 const recipeSchema = new Schema(
   {
+    original: Boolean,
     title: {
       type: String,
       required: true,
     },
-    // array of objects? ingredientName : quantity?
-    ingredients: [String],
+    ingredients: String,
     instructions: String,
     image: {
       type: String,
@@ -17,6 +17,21 @@ const recipeSchema = new Schema(
     duration: {
       type: Number,
       min: 0,
+    },
+    likes: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
+    variants: [
+      {
+        type: ObjectId,
+        ref: 'Recipe',
+      },
+    ],
+    createdBy: {
+      type: ObjectId,
+      ref: 'User',
     },
   },
   {
