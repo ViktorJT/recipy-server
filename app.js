@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const express = require('express');
@@ -10,7 +11,6 @@ const logger = require('morgan');
 const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
-const cors = require('cors');
 
 require('./configs/passport');
 require('./configs/db.config');
@@ -61,8 +61,14 @@ app.use(
   })
 );
 
-app.use('/', require('./routes/index'));
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3000'], // <== this will be the URL of our React app (it will be running on port 3000)
+  })
+);
 
+app.use('/', require('./routes/index'));
 app.use('/api', require('./routes/auth-routes'));
 app.use('/api', require('./routes/cookbook-routes'));
 app.use('/api', require('./routes/recipe-routes'));

@@ -25,9 +25,10 @@ router.post('/cookbooks', (req, res) => {
     });
 });
 
-// ===================
-// * GET All Cookbooks
-// ===================
+// ?================================
+// ? GET All Cookbooks
+// ? Not sure this is really needed?
+// ?================================
 
 router.get('/cookbooks', (_, res) => {
   Cookbook.find()
@@ -41,9 +42,10 @@ router.get('/cookbooks', (_, res) => {
     });
 });
 
-// !============================
+// !=============================
 // ! GET All Cookbooks from User
-// !============================
+// TODO: Add this for profile page
+// !=============================
 
 // router.get('/:userId/cookbooks', (_, res) => {
 //   Cookbook.find({something something something})
@@ -90,7 +92,7 @@ router.put('/cookbooks/:id', (req, res, next) => {
 
   Cookbook.findByIdAndUpdate(req.params.id, req.body)
     .then(() => {
-      res.json({message: `Cookbook with ${req.params.id} was updated successfully.`});
+      res.json({message: `Cookbook with id ${req.params.id} was updated successfully.`});
     })
     .catch((error) => {
       res.json(error);

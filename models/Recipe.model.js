@@ -7,6 +7,7 @@ const recipeSchema = new Schema(
       type: String,
       required: true,
     },
+    // array of objects? ingredientName : quantity?
     ingredients: [String],
     instructions: String,
     image: {

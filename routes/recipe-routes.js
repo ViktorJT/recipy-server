@@ -7,6 +7,7 @@ const Recipe = require('../models/Recipe.model');
 
 // ========================
 // * ADD Recipe to Cookbook
+// This WORKS, BUT need to check later if the cookbookId shouldn't come from the body of the form submit instead of from the params? (see the Ironhack tutorial from paragraph 'At the very beginning, we created two files inside routes folder. One was project-routes.js, which we filled with routes, and now we will do the same for task-routes.js:')
 // ========================
 
 router.post('/cookbooks/:cookbookId/recipes', (req, res, next) => {
@@ -20,20 +21,22 @@ router.post('/cookbooks/:cookbookId/recipes', (req, res, next) => {
     duration,
   })
     .then((response) => {
-      console.log(response, 'updating cookbook');
-      return Cookbook.findByIdAndUpdate(req.body.cookbookId, {
+      return Cookbook.findByIdAndUpdate(req.params.cookbookId, {
         $push: {recipes: response._id},
       });
     })
     .then((theResponse) => {
-      console.log(theResponse, 'cookbook updated');
       res.json(theResponse);
     })
     .catch((err) => {
-      console.log(err, 'something went wrong');
       res.json(err);
     });
 });
+
+// !===============================
+// ! GET All Recipes
+// ! This should be on the homepage
+// !===============================
 
 // ================================
 // * GET Recipe by ID from Cookbook
@@ -55,15 +58,15 @@ router.get('/cookbooks/:cookbookId/recipes/:recipeId', (req, res, next) => {
 // * UPDATE Recipe by ID in Cookbook
 // =================================
 
-router.put('/recipes/:id', (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+router.put('/cookbooks/:cookbookId/recipes/:recipeId', (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.recipeId)) {
     res.status(400).json({message: 'Specified id is not valid'});
     return;
   }
 
-  Recipe.findByIdAndUpdate(req.params.id, req.body)
+  Recipe.findByIdAndUpdate(req.params.recipeId, req.body)
     .then(() => {
-      res.json({message: `Recipe with ${req.params.id} was updated successfully.`});
+      res.json({message: `Recipe with id ${req.params.recipeId} was updated successfully.`});
     })
     .catch((err) => {
       res.json(err);
@@ -74,15 +77,15 @@ router.put('/recipes/:id', (req, res, next) => {
 // * DELETE Recipe by ID in Cookbook
 // =================================
 
-router.delete('/recipes/:id', (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+router.delete('/cookbooks/:cookbookId/recipes/:recipeId', (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.recipeId)) {
     res.status(400).json({message: 'Specified id is not valid'});
     return;
   }
 
-  Recipe.findByIdAndRemove(req.params.id)
+  Recipe.findByIdAndRemove(req.params.recipeId)
     .then(() => {
-      res.json({message: `Recipe with ${req.params.id} is removed successfully.`});
+      res.json({message: `Recipe with ${req.params.recipeId} is removed successfully.`});
     })
     .catch((error) => {
       res.json(error);
