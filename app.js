@@ -56,14 +56,7 @@ app.locals.title = 'Recipy';
 app.use(
   cors({
     credentials: true,
-    origin: ['http://localhost:3000'],
-  })
-);
-
-app.use(
-  cors({
-    credentials: true,
-    origin: ['http://localhost:3000'], // <== this will be the URL of our React app (it will be running on port 3000)
+    origin: [process.env.FRONTEND_POINT, 'http://localhost:3000'],
   })
 );
 
