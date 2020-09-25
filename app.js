@@ -51,7 +51,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// default value for title local
 app.locals.title = 'Recipy';
 
 app.use(
@@ -68,7 +67,6 @@ app.use(
   })
 );
 
-app.use('/', require('./routes/index'));
 app.use('/api', require('./routes/auth-routes'));
 app.use('/api', require('./routes/recipe-routes'));
 
