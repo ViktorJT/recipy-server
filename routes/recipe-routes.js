@@ -33,6 +33,31 @@ router.post('/recipes/add', (req, res) => {
     .catch((err) => console.log(err));
 });
 
+// ================
+// * COPY VARIANT
+// ================
+
+router.post('/recipes/copy', (req, res) => {
+  const {title, ingredients, instructions, image, duration, variantOf} = req.body;
+
+  Variant.create({
+    title,
+    ingredients,
+    instructions,
+    image,
+    duration,
+    variantOf,
+  })
+    .then((res) => {
+      Recipe.findByIdAndUpdate(variantOf, {
+        $push: {variants: res._id},
+      })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+});
+
 // =================
 // * GET ALL RECIPES
 // =================
@@ -139,13 +164,50 @@ router.delete('/recipes/:id', (req, res, next) => {
     return;
   }
 
-  Variant.findByIdAndRemove(req.params.id)
-    .then(() => {
-      res.json({message: `Variant with ${req.params.id} was removed successfully.`});
-    })
-    .catch((error) => {
-      res.json(error);
-    });
+  console.log(req.params);
+
+  Recipe.find({variants: [req.params.id]}).then((res) => {
+    console.log(typeof res.variants);
+    // if (res.variants.length > 1) {
+    //   console.log('remove variant');
+    //   // Variant.findByIdAndRemove(req.params.id)
+    //   //   .then(() => {
+    //   //     res.json({message: `Variant with ${req.params.id} was removed successfully.`});
+    //   //   })
+    //   //   .catch((error) => {
+    //   //     res.json(error);
+    //   //   });
+    // } else {
+    //   console.log('remove variant & recipe');
+    // }
+  });
+
+  // Recipe.findByIdAndRemove(req.params.id)
+  //   .then((res) => {
+  //     Variant.create({
+  //       title,
+  //       ingredients,
+  //       instructions,
+  //       image,
+  //       duration,
+  //       variantOf: res._id,
+  //     })
+  //       .then((variant) => {
+  //         return Recipe.findByIdAndUpdate(variant.variantOf, {
+  //           $push: {variants: variant._id},
+  //         });
+  //       })
+  //       .catch((err) => console.log(err));
+  //   })
+  //   .catch((err) => console.log(err));
+
+  // Variant.findByIdAndRemove(req.params.id)
+  //   .then(() => {
+  //     res.json({message: `Variant with ${req.params.id} was removed successfully.`});
+  //   })
+  //   .catch((error) => {
+  //     res.json(error);
+  //   });
 });
 
 module.exports = router;
