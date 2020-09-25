@@ -56,7 +56,7 @@ app.locals.title = 'Recipy';
 app.use(
   cors({
     credentials: true,
-    origin: process.env.FRONTEND_POINT,
+    origin: 'https://zealous-pasteur-fbd85f.netlify.app/',
   })
 );
 
