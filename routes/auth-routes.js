@@ -1,13 +1,12 @@
 const express = require('express');
-const authRoutes = express.Router();
+const router = express.Router();
 
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/User.model');
 
-authRoutes.post('/signup', (req, res, next) => {
-
+router.post('/signup', (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
 
@@ -53,7 +52,7 @@ authRoutes.post('/signup', (req, res, next) => {
   });
 });
 
-authRoutes.post('/login', (req, res, next) => {
+router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, theUser, failureDetails) => {
     if (err) {
       res.status(500).json({message: 'Something went wrong authenticating user'});
@@ -76,12 +75,12 @@ authRoutes.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-authRoutes.post('/logout', (req, res, next) => {
+router.post('/logout', (req, res, next) => {
   req.logout();
   res.status(200).json({message: 'Log out success!'});
 });
 
-authRoutes.get('/loggedin', (req, res, next) => {
+router.get('/loggedin', (req, res, next) => {
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
     return;
@@ -89,4 +88,4 @@ authRoutes.get('/loggedin', (req, res, next) => {
   res.status(403).json({message: 'Unauthorized'});
 });
 
-module.exports = authRoutes;
+module.exports = router;

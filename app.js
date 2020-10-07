@@ -1,9 +1,5 @@
 require('dotenv').config();
 
-// debugging!
-
-console.log('THIS IS THE SERVER!');
-
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');

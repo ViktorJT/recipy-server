@@ -63,8 +63,6 @@ router.post('/recipes/copy', (req, res) => {
 // =================
 
 router.get('/recipes', (_, res) => {
-  console.log('trying to get recipies!');
-
   Recipe.find()
     .populate('variants')
     .then((allRecipes) => {
