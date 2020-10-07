@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 mongoose
-  // ! CHANGE TO .ENV VARIABLE FOR ATLAS CONNECTION LATER
   .connect(`${process.env.MONGODB_URI}`, {
     useCreateIndex: true,
     useNewUrlParser: true,
