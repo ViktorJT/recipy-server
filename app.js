@@ -53,19 +53,14 @@ app.use(passport.session());
 
 app.locals.title = 'Recipy';
 
-app.use(
-  cors({
-    credentials: true,
-    origin: [process.env.FRONTEND_POINT, 'http://localhost:3000'],
-  })
-);
-
 // app.use(
 //   cors({
 //     credentials: true,
-//     origin: 'http://localhost:3000',
+//     origin: [process.env.FRONTEND_POINT, 'http://localhost:3000'],
 //   })
 // );
+
+app.use(cors());
 
 app.use('/api', require('./routes/auth-routes'));
 app.use('/api', require('./routes/recipe-routes'));
